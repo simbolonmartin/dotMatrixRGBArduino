@@ -33,6 +33,8 @@ RGBmatrixPanel matrix(A, B, C, D, CLK, LAT, OE, false, 64);
 
 
 float  floatTemperature = 0;
+String receivedChars; 
+String dataTemperature, dataHeight;
 
 void setup() {
   Serial.begin(9600);
@@ -42,87 +44,12 @@ void setup() {
 }
 
 void loop() {
-
-  //    // draw some text!
-  //  matrix.setTextSize(1);     // size 1 == 8 pixels high
-  //  matrix.setTextWrap(false); // Don't wrap at end of line - will do ourselves
-  //
-  //
-  //  matrix.setCursor(3, 0);  // start at top left, with 3 pixel of spacing  //column, row
-  //  uint8_t w = 0;
-  //  char *str = "Welcome ToDFROBOT";
-  //  for (w=0; w<10; w++) {
-  //    matrix.setTextColor(Wheel(w));
-  //    matrix.print(str[w]);
-  //  }
-  //
-  //  matrix.setCursor(13, 8);    // next line
-  //  for (w=10; w<17; w++) {
-  //    matrix.setTextColor(Wheel(w));
-  //    matrix.print(str[w]);
-  //  }
-  //
-  //
-  //  matrix.println();
-  //  matrix.setCursor(2, 16);
-  //
-  //
-  //  matrix.setTextColor(matrix.Color333(7,7,7));
-  //  matrix.println("I'm always");
-  //
-  //  // print each letter with a rainbow color
-  //  matrix.setCursor(3, 24);
-  //  matrix.setTextColor(matrix.Color333(7,0,0));
-  //  matrix.print('B');
-  //  matrix.setTextColor(matrix.Color333(7,4,0));
-  //  matrix.print('y');
-  //  matrix.setTextColor(matrix.Color333(7,7,0));
-  //  matrix.print(' ');
-  //  matrix.setTextColor(matrix.Color333(4,7,0));
-  //  matrix.print('U');
-  //  matrix.setTextColor(matrix.Color333(0,7,0));
-  //  matrix.print(' ');
-  //  matrix.setTextColor(matrix.Color333(0,7,7));
-  //  matrix.print("S");
-  //  matrix.setTextColor(matrix.Color333(0,4,7));
-  //  matrix.print('i');
-  //  matrix.setTextColor(matrix.Color333(0,0,7));
-  //  matrix.print('d');
-  //  matrix.setTextColor(matrix.Color333(4,0,7));
-  //  matrix.print("e");
-  //  matrix.setTextColor(matrix.Color333(7,0,4));
-  //  matrix.println("!");
-  //  delay(50000);
-
-  //matrix.setTextSize(3);  //1=8 2=14 3=21
-  //matrix.setTextWrap(false); // Don't wrap at end of line - will do ourselves
-  //matrix.setCursor(3, 0);  // start at top left, with 3 pixel of spacing  //column, row
-  //matrix.setTextColor(matrix.Color333(7,0,0));
-  //matrix.print('T');
-  //
-  //delay(1000);
-  //
-  //matrix.fillScreen(matrix.Color333(0, 0, 0));
-  //matrix.setCursor(3, 0);  // start at top left, with 3 pixel of spacing  //column, row
-  //matrix.setTextColor(matrix.Color333(7,0,0));
-  //matrix.print('E');
-  //
-  //delay(1000);
-  //
-  //matrix.fillScreen(matrix.Color333(0, 0, 0));
-  //matrix.setCursor(3, 0);  // start at top left, with 3 pixel of spacing  //column, row
-  //matrix.setTextColor(matrix.Color333(7,0,0));
-  //matrix.print('s');
-  //
-  //delay(1000);
-  //
-  //matrix.fillScreen(matrix.Color333(0, 0, 0));
-  //matrix.setCursor(3, 0);  // start at top left, with 3 pixel of spacing  //column, row
-  //matrix.setTextColor(matrix.Color333(7,0,0));
-  //matrix.print('T');
-  //
-  //delay(1000);
-
+  if (Serial.available() > 0) {
+        receivedChars = Serial.readString();
+        dataTemperature = receivedChars[0] + receivedChars[1] +"."+ receivedChars[2];
+        dataHeight = receivedChars[3] +receivedChars[4] + receivedChars[5]; 
+                
+  }
 
 
   matrix.setTextSize(1);  //1=8 2=14 3=21
@@ -131,8 +58,8 @@ void loop() {
 
   matrix.fillScreen(matrix.Color333(0, 0, 0));
   template_function();
-  printTemp("36.5");
-  printHeight("163");
+  printTemp(dataTemperature);
+  printHeight(dataHeight);
 
   delay(3000);
   
@@ -155,11 +82,12 @@ void loop() {
 
 
 
-void printTemp(char *temperature){
+void printTemp(String temperature){
   matrix.setCursor(39, 0);
   uint8_t w = 0;
-  floatTemperature = atof(temperature);
-  Serial.println(floatTemperature);
+  floatTemperature =  temperature.toFloat();
+//  floatTemperature = atof(temperature);
+//  Serial.println(floatTemperature);
   
   for (w = 0; w < 4; w++) {
 
@@ -175,7 +103,7 @@ void printTemp(char *temperature){
     matrix.print(temperature[w]);
   }
 }
-void printHeight(char *height){
+void printHeight(String height){
   matrix.setCursor(39, 8);
   uint8_t w = 0;
   for (w = 0; w < 3; w++) {
