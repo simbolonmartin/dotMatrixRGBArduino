@@ -4,7 +4,7 @@ void command()  //分析command
 {
    
     RcvChar =Serial.read();
-   
+   Serial.println(RcvChar);
    // mySerial.write(RcvChar);
       commandReceived = true;   //確認serial port有無資料輸入
      

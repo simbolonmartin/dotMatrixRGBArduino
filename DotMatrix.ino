@@ -99,25 +99,19 @@ void loop() {
   //
   //
   //    }
-
-
   matrix.setTextSize(1);  //1=8 2=14 3=21
   matrix.setTextWrap(false); // Don't wrap at end of line - will do ourselves
-
-
+  delay(1000);
   matrix.fillScreen(matrix.Color333(0, 0, 0));
   template_function();
   printTemp(dataTemperatureString);
   printHeight(dataHeight);
     if (commandReceived == true)
   {
-
 //          process();
     cleardata();
-
   }
-  delay(3000);
-
+//  delay(500);
 }
 
 
@@ -141,8 +135,6 @@ void printTemp(String temperature) {
     else {
       matrix.setTextColor(matrix.Color333(0, 7, 0)); //green
     }
-
-
     matrix.print(temperature[w]);
     }
 //    matrix.setTextSize(1);
@@ -165,7 +157,7 @@ void template_function() {
     matrix.print(str[w]);
   }
 
-  w = 0;
+   w = 0;
   char *str_2 = "Height:";
   matrix.setCursor(3, 16);
   for (w = 0; w <7 ; w++) {
@@ -173,6 +165,33 @@ void template_function() {
     matrix.setTextColor(matrix.Color333(7, 7, 7));
     matrix.print(str_2[w]);
   }
+  w = 0 ;
+    char *str_3 = "C";
+  matrix.setCursor(58, 8);
+  for (w = 0; w < 1; w++) {
+    matrix.setTextColor(matrix.Color333(7, 0, 0));
+    matrix.print(str_3[w]);
+  }
+
+   w = 0 ;
+    char *str_5 = ".";
+  matrix.setCursor(53, 3);
+  for (w = 0; w < 1; w++) {
+    matrix.setTextColor(matrix.Color333(7, 0, 0));
+    matrix.print(str_5[w]);
+  }
+
+
+  
+
+  w = 0;
+  char *str_4 = "cm";
+  matrix.setCursor(53, 24);
+  for (w = 0; w < 2; w++) {
+    matrix.setTextColor(matrix.Color333(7, 0, 0));
+    matrix.print(str_4[w]);
+  }
+
 }
 
 
