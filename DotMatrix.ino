@@ -19,7 +19,6 @@
 * ****************************************************/
 #include <Adafruit_GFX.h>   // Core graphics library
 #include <RGBmatrixPanel.h> // Hardware-specific library
-
 #define CLK 11
 #define OE  9
 #define LAT 10
@@ -30,26 +29,74 @@
 #define D   A3
 
 RGBmatrixPanel matrix(A, B, C, D, CLK, LAT, OE, false, 64);
-
+int Command_counter;
+char RcvChar;
+String data[10];
+String InData;
+boolean commandReceived = false;
 
 float  floatTemperature = 0;
-String receivedChars; 
+String receivedString;
+char charReceived[8];
 String dataTemperature, dataHeight;
-
+float dataTemperatureFloat;
+String dataTemperatureString;
 void setup() {
   Serial.begin(9600);
-  delay(1000);
+  //  Serial1.begin(9600);
+  //  delay(1000);
   matrix.begin();
 
 }
 
 void loop() {
-  if (Serial.available() > 0) {
-        receivedChars = Serial.readString();
-        dataTemperature = receivedChars[0] + receivedChars[1] +"."+ receivedChars[2];
-        dataHeight = receivedChars[3] +receivedChars[4] + receivedChars[5]; 
-                
+
+  commandReceived = false;
+  Command_counter = 0;
+  int buffersize = 0;
+
+  while (Serial.available() > 1)
+  {
+    command();        //讀取指令
+    buffersize++;
+//    Serial.println(data[0]);
+//    Serial.println(data[1]);
+    dataTemperature = data[0];
+    dataTemperatureFloat = dataTemperature.toFloat();
+    dataTemperatureString = String(dataTemperatureFloat);
+    dataHeight      = data[1];
+
   }
+
+//    Serial.print("Data Temperature: ");
+//    Serial.println(dataTemperature);
+//    Serial.print("Data Height: ");
+//    Serial.println(dataHeight);
+
+
+
+
+  //  Serial.println("Testing");
+  //  Serial.println(dataTemperature);
+  //  Serial.println(dataHeight);
+  //  Serial.println("Endtesting");
+
+  //  dataTemperature = InData[0] + InData[1] + InData[2
+
+
+  //  if (Serial.available() > 0) {
+  //        receivedString = Serial.readString();
+  //        Serial.println(receivedString);
+  //        receivedString.toCharArray(charReceived, 9);
+  //        Serial.println(charReceived);
+  //        dataTemperature = char(charReceived[0]) + char(charReceived[1]) + char(charReceived[2]) + char(charReceived[3]);
+  //        dataHeight = char(charReceived[5]) + char(charReceived[6]) + char(charReceived[7]);
+  //        Serial.println(dataTemperature);
+  //        Serial.println(dataHeight);
+  //
+  //
+  //
+  //    }
 
 
   matrix.setTextSize(1);  //1=8 2=14 3=21
@@ -58,52 +105,45 @@ void loop() {
 
   matrix.fillScreen(matrix.Color333(0, 0, 0));
   template_function();
-  printTemp(dataTemperature);
+  printTemp(dataTemperatureString);
   printHeight(dataHeight);
+    if (commandReceived == true)
+  {
 
+//          process();
+    cleardata();
+
+  }
   delay(3000);
-  
-  matrix.fillScreen(matrix.Color333(0, 0, 0));
-  template_function();
-  printTemp("37.8");
-  printHeight("168");
-
-  delay(3000);
-
-  matrix.fillScreen(matrix.Color333(0, 0, 0));
-  template_function();
-  printTemp("38.3");
-  printHeight("163");
-
-  delay(3000);
- 
 
 }
 
 
 
-void printTemp(String temperature){
-  matrix.setCursor(39, 0);
+void printTemp(String temperature) {
+  matrix.setCursor(33, 0);
   uint8_t w = 0;
   floatTemperature =  temperature.toFloat();
-//  floatTemperature = atof(temperature);
-//  Serial.println(floatTemperature);
-  
-  for (w = 0; w < 4; w++) {
+  //  floatTemperature = atof(temperature);
+  //  Serial.println(floatTemperature);
 
-    if(floatTemperature>38){
+  for (w = 0; w < 6; w++) {
+
+    if (floatTemperature > 38) {
       matrix.setTextColor(matrix.Color333(7, 0, 0));  //red
-      }
-    else if(floatTemperature>37.5){
+    }
+    else if (floatTemperature > 37.5) {
       matrix.setTextColor(matrix.Color333(4, 7, 0));  //yellow
-      }
-    else {matrix.setTextColor(matrix.Color333(0, 7, 0));}  //green
- 
+    }
+    else {
+      matrix.setTextColor(matrix.Color333(0, 7, 0)); //green
+    }
+
 
     matrix.print(temperature[w]);
   }
 }
-void printHeight(String height){
+void printHeight(String height) {
   matrix.setCursor(39, 8);
   uint8_t w = 0;
   for (w = 0; w < 3; w++) {
@@ -115,9 +155,9 @@ void printHeight(String height){
 
 void template_function() {
   uint8_t w = 0;
-  char *str = "Temp :";
+  char *str = "Temp:";
   matrix.setCursor(3, 0);
-  for (w = 0; w < 6; w++) {
+  for (w = 0; w < 5; w++) {
     matrix.setTextColor(matrix.Color333(7, 0, 0));
     matrix.print(str[w]);
   }
@@ -145,4 +185,11 @@ uint16_t Wheel(byte WheelPos) {
     WheelPos -= 16;
     return matrix.Color333(0, WheelPos, 7 - WheelPos);
   }
+}
+
+void cleardata() {
+  for (int i = 0; i < 10; i++) {
+    data[i] = "";
+  }
+
 }
