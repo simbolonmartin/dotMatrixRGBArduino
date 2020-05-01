@@ -53,6 +53,7 @@ void loop() {
 
   commandReceived = false;
   Command_counter = 0;
+  
   int buffersize = 0;
 
   while (Serial.available() > 1)
@@ -68,8 +69,9 @@ void loop() {
 
   }
 
+
 //    Serial.print("Data Temperature: ");
-//    Serial.println(dataTemperature);
+//    Serial.println(dataTemperatureString);
 //    Serial.print("Data Height: ");
 //    Serial.println(dataHeight);
 
@@ -121,7 +123,8 @@ void loop() {
 
 
 void printTemp(String temperature) {
-  matrix.setCursor(33, 0);
+//  matrix.setTextSize(2);
+  matrix.setCursor(18, 8);
   uint8_t w = 0;
   floatTemperature =  temperature.toFloat();
   //  floatTemperature = atof(temperature);
@@ -141,17 +144,17 @@ void printTemp(String temperature) {
 
 
     matrix.print(temperature[w]);
-  }
+    }
+//    matrix.setTextSize(1);
 }
 void printHeight(String height) {
-  matrix.setCursor(39, 8);
+  matrix.setCursor(24, 24);
   uint8_t w = 0;
   for (w = 0; w < 3; w++) {
     matrix.setTextColor(matrix.Color333(7, 7, 7));
     matrix.print(height[w]);
   }
 }
-
 
 void template_function() {
   uint8_t w = 0;
@@ -163,9 +166,9 @@ void template_function() {
   }
 
   w = 0;
-  char *str_2 = "Hght :";
-  matrix.setCursor(3, 8);
-  for (w = 0; w < 6; w++) {
+  char *str_2 = "Height:";
+  matrix.setCursor(3, 16);
+  for (w = 0; w <7 ; w++) {
     //    matrix.setTextColor(Wheel(w));
     matrix.setTextColor(matrix.Color333(7, 7, 7));
     matrix.print(str_2[w]);
