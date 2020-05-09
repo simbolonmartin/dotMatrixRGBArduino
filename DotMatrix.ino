@@ -126,12 +126,12 @@ void printTemp(String temperature) {
 
   for (w = 0; w < 6; w++) {
 
-    if (floatTemperature > 38) {
-      matrix.setTextColor(matrix.Color333(7, 0, 0));  //red
+    if (floatTemperature > 37.5) {
+      matrix.setTextColor(matrix.Color333(7, 0, 0));  //red, according to cdc, 37.5 is the limit to fever
     }
-    else if (floatTemperature > 37.5) {
-      matrix.setTextColor(matrix.Color333(4, 7, 0));  //yellow
-    }
+//    else if (floatTemperature > 37.5) {
+//      matrix.setTextColor(matrix.Color333(4, 7, 0));  //yellow
+//    }
     else {
       matrix.setTextColor(matrix.Color333(0, 7, 0)); //green
     }
